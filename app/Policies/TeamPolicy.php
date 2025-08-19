@@ -10,14 +10,24 @@ class TeamPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user, string $ability): ?bool
+    {
+        // Global admin has all permissions
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
-        return true; // All authenticated users can view teams
+        return true; // All authenticated users can view teams list
     }
 
     public function view(User $user, Team $team): bool
     {
-        return $user->teams->contains($team->id);
+        return $user->belongsToTeam($team);
     }
 
     public function create(User $user): bool
@@ -79,5 +89,26 @@ class TeamPolicy
         }
 
         return true;
+    }
+
+    // Add read-only methods for Player/Viewer roles
+    public function viewMembers(User $user, Team $team): bool
+    {
+        return $user->belongsToTeam($team);
+    }
+
+    public function createPost(User $user, Team $team): bool
+    {
+        return $user->hasTeamRole($team, ['owner', 'manager', 'player']);
+    }
+
+    public function updatePost(User $user, Team $team): bool
+    {
+        return $user->hasTeamRole($team, ['owner', 'manager', 'player']);
+    }
+
+    public function deletePost(User $user, Team $team): bool
+    {
+        return $user->hasTeamRole($team, ['owner', 'manager']);
     }
 }

@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Register the SetCurrentTeam middleware
+        $middleware->web(\App\Http\Middleware\SetCurrentTeam::class);
+        
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -36,4 +36,16 @@ Route::middleware(['auth'])->group(function () {
         ->name('teams.members.remove');
 });
 
+// Admin Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+    
+    // Add more admin routes here
+    Route::view('/users', 'admin.users.index')->name('users.index');
+    Route::view('/teams', 'admin.teams.index')->name('teams.index');
+    Route::view('/settings', 'admin.settings')->name('settings');
+});
+
 require __DIR__.'/auth.php';

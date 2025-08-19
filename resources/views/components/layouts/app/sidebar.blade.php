@@ -20,10 +20,11 @@
             <flux:spacer />
 
             <flux:navlist variant="outline">
-
-                <flux:navlist.item icon="key" href="/" target="_blank">
+                @if (auth()->user()->hasRole('Admin'))
+                <flux:navlist.item icon="key" href="/admin/dashboard" :current="request()->routeIs('admin.dashboard')" wire:navigate>
                 {{ __('Administrator') }}
                 </flux:navlist.item>
+                @endif
             </flux:navlist>
 
             <!-- Desktop User Menu -->

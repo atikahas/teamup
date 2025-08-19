@@ -14,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register the SetCurrentTeam middleware
         $middleware->web(\App\Http\Middleware\SetCurrentTeam::class);
         
-        //
+        // Register the role middleware
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
